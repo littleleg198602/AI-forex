@@ -2,39 +2,39 @@
 
 ## Scope
 
-Review of the current research-only forex backtesting laboratory. The review focused on look-ahead bias, signal timing, cost handling, metrics, strategy safety, accidental live-trading risk, configuration safety, and test coverage.
+Quality review of the new data loader, multi-pair/multi-timeframe backtest runner, walk-forward validation, status classification, reporting layer, and safety boundary. This project remains research/backtest-only.
 
-## Findings and fixes
+## Review checklist
 
-| Severity | Area | Problem found | Fix applied |
-|:--|:--|:--|:--|
-| High | Backtest timing | The original engine generated a signal from the current bar close and could enter or exit at that same close. That is look-ahead biased because the close is only known after the bar finishes. | The engine now treats signals as close-of-bar decisions and executes the previous bar's signal on the next bar open. |
-| Medium | Open trades | The original engine could leave the final position unrealized while metrics read the last equity value. | The engine now closes any remaining open position at the final close and records the trade with costs. |
-| Medium | Costs | Cost configuration fields could silently default to zero if missing, which can hide spread, commission, or slippage omissions. | The engine now validates required cost keys and rejects negative costs. |
-| Medium | Risk metrics | Sharpe ratio and expectancy worked for simple cases but lacked input validation and had implicit assumptions. | Metrics now validate positive initial balance, make expectancy components explicit, sanitize infinite returns, and accept `periods_per_year`. |
-| Low | Strategy ranking | The ranker could over-reward profit factor and under-penalize small samples. | The ranker now caps profit factor, penalizes drawdown, and applies a small-sample penalty below 30 trades. |
-| Low | Tests | Initial tests checked interfaces but did not verify look-ahead prevention or missing cost validation. | Added engine tests for next-open execution and cost validation, plus metric validation tests. |
+| Area | Result | Notes |
+|:--|:--|:--|
+| OHLCV loader validation | Pass | Required columns, empty data, missing values, invalid datetimes, duplicate datetimes, unsorted datetimes, non-positive prices, negative volume, high/low consistency, and open/close range are rejected. |
+| Duplicate/unsorted data | Pass | Duplicate datetime and non-monotonic datetime values fail validation before any backtest can run. |
+| Backtest future-data use | Pass | Strategy signals are generated from bar data, then the engine executes the previous signal on the next bar open. |
+| Walk-forward future-data use | Pass | Each segment is chronological and `train.index.max() < test.index.min()` is enforced. Current sample strategies have fixed parameters; train data is reserved for future model-selection work and is not allowed to include test/future rows. |
+| Synthetic/sample data handling | Pass | Missing CSV data is marked as `synthetic_sample`; reports display warnings and status classification prevents sample-only `paper_candidate`. |
+| Status strictness | Strengthened | Paper-candidate status now requires real CSV data, at least 30 trades, acceptable drawdown, profit factor >= 1.1, non-negative Sharpe, positive expectancy, walk-forward pass rate >= 0.67, and at least two passed segments. |
+| Reports | Pass | `latest_report.md` and `pair_matrix.md` explicitly warn that synthetic/sample data cannot justify paper trading. |
+| Costs | Pass | Backtest initialization requires spread, commission, and slippage fields; integration tests confirm closed trades subtract positive costs from gross PnL. |
+| Live trading / secrets | Pass | No live trading executor, broker integration, API key, password, token, or credential-handling code was added. |
+| Tests | Improved | Added tests for unsorted datetime, missing/zero OHLC values, cost integration, report synthetic warnings, and stricter walk-forward status classification. |
 
-## Strategy review
+## Issues found and fixes applied
 
-- **EMA crossover**: Uses indicators computed from historical/current close only. It is acceptable only when the engine executes on the next bar, which is now enforced.
-- **RSI mean reversion**: Uses rolling close-based RSI. It is acceptable only with next-bar execution. It can be risky in strong trends, so reports should review drawdown and exposure, not only profit.
-- **London breakout**: Uses previous rolling high/low via `.shift(1)`, which avoids using the active bar's high/low range as the breakout reference. It remains a sample strategy and is not live-ready.
-
-## Safety review
-
-- No live trading executor, broker login, API key, password, or account connection was found.
-- Configuration files contain only sample pairs, timeframes, costs, and risk parameters.
-- The project remains backtest/research-only.
+| Severity | Issue | Fix |
+|:--|:--|:--|
+| Medium | Status classification was acceptable but still allowed `paper_candidate` with only one passed walk-forward segment when pass rate reached the threshold. | Tightened classification to require `wf_pass_rate >= 0.67` and `wf_passed_segments >= 2` for `paper_candidate`. |
+| Low | Tests covered duplicate datetime and invalid OHLC values but did not explicitly test unsorted datetime, missing values, and non-positive prices. | Added data-loader tests for unsorted datetime, missing values, and zero prices. |
+| Low | Tests verified missing cost fields but did not prove realized trades actually subtract spread/commission/slippage. | Added an integration test that closes trades and asserts positive cost and `pnl = gross_pnl - cost`. |
+| Low | Report generation created synthetic warnings, but this behavior was not tested directly. | Added report tests checking `synthetic_sample` and paper-readiness warnings. |
 
 ## Remaining recommendations
 
-1. Add realistic historical data fixtures and test multiple pairs/timeframes.
-2. Add explicit stop-loss/take-profit and position-sizing modules before serious research use.
-3. Add walk-forward and out-of-sample tests before marking any strategy as a paper candidate.
-4. Add tests for JPY pair PnL conversion and non-USD account currency assumptions.
-5. Add transaction-cost sensitivity tests to ensure conclusions do not depend on one cost profile.
+1. Add real historical CSV fixtures for a small subset of pairs/timeframes so paper-candidate behavior can be tested without synthetic data.
+2. Add more detailed transaction-cost sensitivity reports by pair and timeframe.
+3. Add explicit tests for JPY PnL assumptions and non-USD account currency limitations.
+4. Keep all optimizer work out of this phase; parameter optimization requires separate anti-overfitting controls.
 
 ## Verdict
 
-The most important look-ahead and silent-cost issues have been fixed. The system is still a research scaffold, not a production-grade backtester and not live-trading ready.
+The data and walk-forward layers are safer after this review. The main risks are now covered by tests: bad data rejection, no-look-ahead engine timing, no-look-ahead walk-forward splits, cost subtraction, status strictness, and report warnings. No live trading, broker executor, optimizer, or secrets were added.

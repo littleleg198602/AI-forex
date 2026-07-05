@@ -29,12 +29,18 @@ def classify_status(metrics: dict[str, float], risk: dict[str, float], data_sour
         return "reject"
     if metrics.get("sharpe_ratio", 0.0) < 0:
         return "reject"
-    if metrics.get("wf_segments", 0) == 0 or metrics.get("wf_pass_rate", 0.0) <= 0:
+    wf_segments = int(metrics.get("wf_segments", 0))
+    wf_passed_segments = int(metrics.get("wf_passed_segments", 0))
+    wf_pass_rate = float(metrics.get("wf_pass_rate", 0.0))
+    if wf_segments == 0 or wf_pass_rate <= 0:
         return "reject"
     if metrics.get("expectancy", 0.0) <= 0:
         return "watchlist"
     if data_source != "csv":
         return "watchlist"
-    if metrics.get("wf_pass_rate", 0.0) < 0.5:
+    # Be intentionally strict: one lucky passing segment should never create a
+    # paper candidate. Require a majority pass rate and at least two passing
+    # test windows before paper review.
+    if wf_pass_rate < 0.67 or wf_passed_segments < 2:
         return "watchlist"
     return "paper_candidate"

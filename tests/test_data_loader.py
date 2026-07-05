@@ -48,3 +48,22 @@ def test_reject_invalid_ohlc_values():
     data.loc[0, "open"] = 2.0
     with pytest.raises(DataValidationError, match="Open price"):
         validate_ohlcv(data)
+
+
+def test_reject_unsorted_datetime():
+    data = valid_frame()
+    data.loc[[1, 2], "datetime"] = data.loc[[2, 1], "datetime"].to_numpy()
+    with pytest.raises(DataValidationError, match="sorted ascending"):
+        validate_ohlcv(data)
+
+
+def test_reject_missing_values_and_non_positive_prices():
+    data = valid_frame()
+    data.loc[0, "close"] = None
+    with pytest.raises(DataValidationError, match="missing values"):
+        validate_ohlcv(data)
+
+    data = valid_frame()
+    data.loc[0, "close"] = 0
+    with pytest.raises(DataValidationError, match="positive"):
+        validate_ohlcv(data)
