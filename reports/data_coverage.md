@@ -1,12 +1,6 @@
-# Rejected and Skipped Strategies
+# Data Coverage
 
-Performance rejects are evaluated strategy rows. Data skips are pair/timeframe combinations that were not evaluated because data was missing or failed validation.
-
-## Rejected by performance
-
-No evaluated strategy rows.
-
-## Skipped due to missing or invalid data
+Expected pair × timeframe combinations and their data availability. `validation_status=valid` means the dataset passed OHLCV validation; `missing` and `failed_validation` rows were not backtested in csv-only mode.
 
 | pair   | timeframe   | csv_exists   | start_date   | end_date   |   candles | data_source   | validation_status   | message                      |
 |:-------|:------------|:-------------|:-------------|:-----------|----------:|:--------------|:--------------------|:-----------------------------|

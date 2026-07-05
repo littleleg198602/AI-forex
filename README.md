@@ -46,6 +46,29 @@ Validation rejects missing columns, empty files, duplicate or unsorted datetimes
 
 If a configured pair/timeframe CSV is missing, `scripts/run_backtest.py` creates deterministic `synthetic_sample` data so the project remains runnable. Synthetic sample rows are clearly marked in reports and are **not** sufficient for `paper_candidate` status. Real historical CSV rows are marked as `csv` in `data_source`.
 
+
+## Real historical data
+
+For real research, put OHLCV CSV files into `data/raw/` and run CSV-only mode so missing data is skipped instead of replaced with synthetic data:
+
+```bash
+python scripts/run_backtest.py --data-mode csv-only
+```
+
+Synthetic demo mode is only for pipeline checks and cannot create paper candidates:
+
+```bash
+python scripts/run_backtest.py --data-mode synthetic-demo
+```
+
+Optional local MetaTrader 5 historical export is available when the platform-specific `MetaTrader5` Python package is installed locally. It is intentionally data-only and does not store credentials or send orders:
+
+```bash
+python scripts/export_mt5_history.py --pairs EURUSD GBPUSD --timeframes M15 H1 --from 2023-01-01 --to 2026-07-05 --output data/raw --validate
+```
+
+See `docs/DATA_IMPORT.md` for manual CSV import, MT5 export notes, data coverage, and why large real CSV files should usually stay out of GitHub.
+
 ## Run tests
 
 ```bash
@@ -55,7 +78,7 @@ pytest
 ## Run multi-pair backtest
 
 ```bash
-python scripts/run_backtest.py
+python scripts/run_backtest.py --data-mode csv-only
 python scripts/generate_report.py
 ```
 

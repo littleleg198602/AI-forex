@@ -20,3 +20,6 @@ reports/*
 !reports/pair_matrix.md
 !reports/rejected_strategies.md
 !results/strategy_scoreboard.csv
+!data/raw/README.md
+!reports/data_coverage.md
+!results/data_coverage.csv
