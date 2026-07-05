@@ -16,3 +16,4 @@ results/*
 reports/*
 !reports/.gitkeep
 !reports/latest_report.md
+!reports/quality_review.md
