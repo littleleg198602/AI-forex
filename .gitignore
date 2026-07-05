@@ -17,3 +17,6 @@ reports/*
 !reports/.gitkeep
 !reports/latest_report.md
 !reports/quality_review.md
+!reports/pair_matrix.md
+!reports/rejected_strategies.md
+!results/strategy_scoreboard.csv
