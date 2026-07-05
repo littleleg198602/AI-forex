@@ -1,0 +1,6 @@
+initial_balance: 10000.0
+risk_per_trade: 0.01
+max_daily_loss: 0.03
+max_drawdown_limit: 0.20
+max_open_positions: 1
+position_size_lots: 0.1
