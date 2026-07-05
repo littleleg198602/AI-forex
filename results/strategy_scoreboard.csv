@@ -1,0 +1,1 @@
+strategy,pair,timeframe,data_source,start_date,end_date,trades,total_return,profit_factor,max_drawdown,win_rate,expectancy,sharpe_ratio,exposure_time,wf_segments,wf_passed_segments,wf_pass_rate,wf_avg_test_return,wf_max_test_drawdown,status
