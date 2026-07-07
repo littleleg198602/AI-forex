@@ -16,7 +16,7 @@ Quality review of the data import modes, data-only MT5 history exporter, data co
 | Trading/execution boundary | Pass | No live executor, order placement code, optimizer, API key, password, token, or credential storage was added. |
 | Reports | Pass | Reports show counts for `csv`, `synthetic_sample`, `missing`, and `failed_validation`, and separate data skips from performance rejects. |
 | Costs | Pass | Evaluated strategy rows still use `BacktestEngine`, which requires spread, commission, and slippage fields. |
-| Tests | Improved | Added tests for data modes, data coverage report output, MT5 exporter safety, missing CSV behavior, and project execution-boundary strings. |
+| Tests | Improved | Added tests for data modes, data coverage report output, MT5 exporter safety, missing CSV behavior, `.gitignore` protections, and project execution-boundary strings. |
 
 ## Issues found and fixes applied
 
@@ -26,6 +26,7 @@ Quality review of the data import modes, data-only MT5 history exporter, data co
 | Medium | Reports showed sample warnings but did not summarize data coverage counts. | Added coverage counts to `latest_report.md` and a dedicated `data_coverage.md` report. |
 | Medium | Rejections due to missing/invalid data were not clearly separated from strategy performance rejects. | Updated `rejected_strategies.md` to include separate skipped-data sections. |
 | Low | MT5 import workflow was undocumented. | Added `docs/DATA_IMPORT.md` and `data/raw/README.md`. |
+| Low | Secret/data ignore rules covered `.env` and raw data but did not explicitly list common key/credential file suffixes. | Extended `.gitignore` with `.env.*`, `*.key`, certificate/key containers, `secrets.*`, and `credentials.*`; added a regression test. |
 
 ## Remaining recommendations
 
@@ -35,4 +36,4 @@ Quality review of the data import modes, data-only MT5 history exporter, data co
 
 ## Verdict
 
-The project now defaults to real CSV-only research behavior and makes missing, failed, CSV, and synthetic data explicit in reports. No live trading, broker executor, optimizer, order-placement function, or secrets were added.
+The project now defaults to real CSV-only research behavior and makes missing, failed, CSV, and synthetic data explicit in reports. Ignore rules cover raw CSV dumps and common secret file patterns. No live trading, broker executor, optimizer, order-placement function, or secrets were added.

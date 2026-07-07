@@ -23,3 +23,11 @@ reports/*
 !data/raw/README.md
 !reports/data_coverage.md
 !results/data_coverage.csv
+.env.*
+*.env
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.*
+credentials.*

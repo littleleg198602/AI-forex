@@ -47,6 +47,20 @@ Validation rejects missing columns, empty files, duplicate or unsorted datetimes
 If a configured pair/timeframe CSV is missing, `scripts/run_backtest.py` creates deterministic `synthetic_sample` data so the project remains runnable. Synthetic sample rows are clearly marked in reports and are **not** sufficient for `paper_candidate` status. Real historical CSV rows are marked as `csv` in `data_source`.
 
 
+
+## Windows local launcher
+
+1. Download ZIP or `git clone` this repository.
+2. Double-click `START_WINDOWS.bat` from the project root.
+3. Choose menu option `1` to install/update dependencies.
+4. Open MetaTrader 5 locally if you want to export historical data.
+5. Choose menu option `3` for a small MT5 history export test.
+6. Choose menu option `5` to run the CSV-only backtest.
+7. Choose menu option `7` to generate reports.
+8. Reports are in `reports/`; use menu option `9` to open the folder.
+
+See `docs/LOCAL_LAUNCHER.md` for all menu options and safety notes.
+
 ## Real historical data
 
 For real research, put OHLCV CSV files into `data/raw/` and run CSV-only mode so missing data is skipped instead of replaced with synthetic data:
