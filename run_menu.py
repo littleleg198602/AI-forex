@@ -71,10 +71,25 @@ def export_mt5_small() -> None:
         "scripts/export_mt5_history.py",
         "--pairs", "EURUSD", "GBPUSD",
         "--timeframes", "M15", "H1",
-        "--from", "2023-01-01",
-        "--to", "2026-07-05",
+        "--from", "2026-06-30",
+        "--to", "2026-07-08",
         "--output", "data/raw",
         "--validate",
+    ])
+
+
+def export_mt5_medium() -> None:
+    mt5_notice()
+    run_command([
+        PYTHON,
+        "scripts/export_mt5_history.py",
+        "--pairs", "EURUSD", "GBPUSD",
+        "--timeframes", "M15", "H1",
+        "--from", "2025-01-01",
+        "--to", "2026-07-08",
+        "--output", "data/raw",
+        "--validate",
+        "--overwrite",
     ])
 
 
@@ -100,6 +115,7 @@ def diagnose_mt5_data() -> None:
 
 def export_mt5_full() -> None:
     mt5_notice()
+    print("Full export may fail for lower timeframes if MT5 has not downloaded deep history. Run small test first.")
     config = load_launcher_config()
     command = [
         PYTHON,
@@ -193,6 +209,7 @@ FOREX AI LAB - LOCAL LAUNCHER
 10 - Open results folder
 11 - Safety scan
 12 - Diagnose MT5 data availability
+13 - Export MT5 history - medium test
 0 - Exit
 """)
 
@@ -211,6 +228,7 @@ def menu_loop() -> None:
         "10": lambda: open_folder("results"),
         "11": safety_scan,
         "12": diagnose_mt5_data,
+        "13": export_mt5_medium,
     }
     while True:
         show_menu()

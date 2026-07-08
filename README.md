@@ -54,12 +54,13 @@ If a configured pair/timeframe CSV is missing, `scripts/run_backtest.py` creates
 2. Double-click `START_WINDOWS.bat` from the project root.
 3. Choose menu option `1` to install/update dependencies.
 4. Open MetaTrader 5 locally if you want to export historical data.
-5. Choose menu option `3` for a small MT5 history export test.
-6. Choose menu option `5` to run the CSV-only backtest.
-7. Choose menu option `7` to generate reports.
-8. Reports are in `reports/`; use menu option `9` to open the folder.
+5. Choose menu option `3` for a small recent MT5 export test that verifies connection and latest data availability.
+6. Optionally choose menu option `13` for a medium MT5 export test that verifies longer history before a full export.
+7. Choose menu option `5` to run the CSV-only backtest.
+8. Choose menu option `7` to generate reports.
+9. Reports are in `reports/`; use menu option `9` to open the folder.
 
-See `docs/LOCAL_LAUNCHER.md` for all menu options and safety notes.
+Use the full configured export only after the small and medium checks confirm that MT5 has downloaded enough history. See `docs/LOCAL_LAUNCHER.md` for all menu options and safety notes.
 
 ## Real historical data
 

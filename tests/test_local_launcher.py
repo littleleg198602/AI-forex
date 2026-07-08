@@ -2,6 +2,8 @@ from pathlib import Path
 
 import yaml
 
+import run_menu
+
 
 def test_windows_launcher_files_exist():
     assert Path("run_menu.py").exists()
@@ -35,3 +37,18 @@ def test_local_launcher_config_has_defaults():
     assert config["default_from"]
     assert config["default_to"]
     assert config["output_dir"] == "data/raw"
+
+
+def test_small_mt5_export_uses_recent_date_range(monkeypatch):
+    commands = []
+
+    monkeypatch.setattr(run_menu, "mt5_notice", lambda: None)
+    monkeypatch.setattr(run_menu, "run_command", lambda command: commands.append(command) or 0)
+
+    run_menu.export_mt5_small()
+
+    assert commands
+    command = commands[0]
+    assert command[command.index("--from") + 1] == "2026-06-30"
+    assert command[command.index("--to") + 1] == "2026-07-08"
+    assert "2023-01-01" not in command
