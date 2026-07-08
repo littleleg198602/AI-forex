@@ -29,6 +29,7 @@ PowerShell users can run `START_WINDOWS.ps1`. If PowerShell execution policy blo
 - `9`: open `reports/`.
 - `10`: open `results/`.
 - `11`: run a safety scan for execution/secret markers in Python code outside tests.
+- `12`: diagnose MT5 data availability for EURUSD/GBPUSD on M15/H1 without saving CSV files.
 
 ## MT5 export notes
 
@@ -41,3 +42,9 @@ Before export:
 - Export is data-only and does not trade.
 
 Exported CSV files are written to `data/raw/` and validated by the existing OHLCV validator when `--validate` is used.
+
+## M15 no bars returned troubleshooting
+
+Use menu option `12 - Diagnose MT5 data availability` when H1 works but M15 returns no bars. It runs diagnose-only mode and writes `reports/mt5_export_report.md` without saving CSV files.
+
+Check the report fields for terminal path/company/name and runtime account/server details. If they do not match the terminal you have open, Python is connected to a different MT5 terminal. Then open the correct symbol and M15 chart in MT5, make sure the symbol is in Market Watch, scroll back to load history, and retry a shorter recent date range.

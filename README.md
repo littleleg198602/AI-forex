@@ -127,6 +127,17 @@ Statuses:
 4. Add or update tests.
 5. Run `pytest`, `python scripts/run_backtest.py`, and `python scripts/generate_report.py`.
 
+
+## M15 no bars returned troubleshooting
+
+If H1 exports work but M15 returns no bars, run diagnose-only mode to verify which MT5 terminal Python sees, whether latest bars are available, and whether only the requested date range is missing:
+
+```bash
+python scripts/export_mt5_history.py --pairs GBPUSD EURUSD --timeframes M15 H1 --from 2026-06-30 --to 2026-07-08 --output data/raw --diagnose-only
+```
+
+Then review `reports/mt5_export_report.md`. If `terminal_path` or terminal name/company does not match your open MT5 terminal, start the intended terminal. Open the exact broker symbol and M15 chart, ensure it is in Market Watch, scroll back to download history, and retry a shorter recent range first.
+
 ## Safety boundary
 
 This project is research-only. Do not add live trading executors, broker credentials, automatic real-account execution, optimizer automation, or claims that a strategy is live-ready based on one backtest.

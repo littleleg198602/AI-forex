@@ -65,3 +65,21 @@ Synthetic/sample data is deterministic demo data. It is useful for testing the c
 ## Why large real data is not committed
 
 Historical OHLCV datasets can be large, licensed, or broker-specific. Keep large real CSV files out of GitHub and store them in local or approved data storage. The repository tracks `data/raw/README.md` and `.gitkeep`, not large data dumps.
+
+## M15 no bars returned troubleshooting
+
+If H1 exports work but M15 returns no bars, first confirm that Python is attached to the same MT5 terminal you are looking at. Run diagnose-only mode:
+
+```bash
+python scripts/export_mt5_history.py --pairs GBPUSD EURUSD --timeframes M15 H1 --from 2026-06-30 --to 2026-07-08 --output data/raw --diagnose-only
+```
+
+Review `reports/mt5_export_report.md` and compare `terminal_path`, `terminal_company`, `terminal_name`, account login/server shown at runtime, and `connected`. If the path/name differ from your open terminal, start the intended terminal and rerun.
+
+For the symbol/timeframe:
+
+1. Open the exact symbol in Market Watch. If your broker uses a suffix such as `GBPUSD.r`, use that broker symbol in your local export workflow.
+2. Open the M15 chart in MT5 and scroll back to force history download.
+3. Try a short recent range first, for example `--from 2026-06-30 --to 2026-07-08`.
+4. If `latest_probe_bars_count` is positive but `range_bars_count` is zero, latest bars exist but the requested date range is missing in local MT5 history.
+5. If both counts are zero, MT5 currently has no available data for that symbol/timeframe in the Python-connected terminal.
