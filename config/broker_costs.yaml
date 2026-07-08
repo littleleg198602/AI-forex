@@ -1,0 +1,13 @@
+default:
+  spread_pips: 1.2
+  commission_per_lot: 7.0
+  slippage_pips: 0.2
+pairs:
+  EURUSD:
+    spread_pips: 0.9
+    commission_per_lot: 7.0
+    slippage_pips: 0.1
+  GBPJPY:
+    spread_pips: 1.8
+    commission_per_lot: 7.0
+    slippage_pips: 0.3

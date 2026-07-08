@@ -1,0 +1,19 @@
+default_pairs:
+  - EURUSD
+  - GBPUSD
+  - USDJPY
+  - USDCHF
+  - USDCAD
+  - AUDUSD
+  - NZDUSD
+  - EURJPY
+  - GBPJPY
+  - EURGBP
+default_timeframes:
+  - M15
+  - M30
+  - H1
+  - H4
+default_from: "2021-01-01"
+default_to: "2026-07-05"
+output_dir: "data/raw"
