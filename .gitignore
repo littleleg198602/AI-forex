@@ -31,3 +31,4 @@ reports/*
 *.pfx
 secrets.*
 credentials.*
+!reports/mt5_export_report.md
